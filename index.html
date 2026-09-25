@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111316">
+  <meta name="description" content="Make your own Wallet card artwork. Layer payment logos over any wallpaper and export a PNG for AirCard. Everything stays in your browser.">
+  <title>AirCard Studio — Make it yours</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="./" aria-label="AirCard Studio home"><span class="brand-icon" aria-hidden="true">▱</span> AIRCARD<span class="wordmark-light">STUDIO</span></a>
+    <span class="local-badge"><span></span> Made here. Stays here.</span>
+    <button id="export" class="button primary"><span aria-hidden="true">↓</span> Export PNG</button>
+  </header>
+  <main class="workspace">
+    <aside class="panel setup-panel" aria-label="Card setup">
+      <div class="panel-heading"><span class="eyebrow">THE FOUNDATION</span><h1>Your card, your canvas.</h1></div>
+      <section>
+        <div class="section-heading"><h2>Wallpaper</h2><span class="step">01</span></div>
+        <label class="upload-zone" id="wallpaper-drop" tabindex="0" role="button" aria-label="Upload wallpaper">
+          <input type="file" id="wallpaper-file" accept="image/png,image/jpeg,image/webp,image/avif" hidden>
+          <span class="upload-icon" aria-hidden="true">↥</span><strong>Drop your image here</strong><span>or click to browse</span><small>PNG, JPG, WebP or AVIF · up to 25 MB</small>
+        </label>
+        <div class="wallpaper-info" id="wallpaper-info" hidden><span id="wallpaper-name"></span><button class="text-button" id="remove-wallpaper">Remove</button></div>
+        <div class="swatch-row" aria-label="Background colours">
+          <button class="swatch selected" data-background="aurora" aria-label="Aurora background" aria-pressed="true" style="--swatch:linear-gradient(135deg,#071d33,#437a9b,#99e1c4)"></button>
+          <button class="swatch" data-background="ink" aria-label="Ink background" aria-pressed="false" style="--swatch:linear-gradient(135deg,#141721,#444d65)"></button>
+          <button class="swatch" data-background="gold" aria-label="Gold background" aria-pressed="false" style="--swatch:linear-gradient(135deg,#735024,#eacb87)"></button>
+          <button class="swatch" data-background="rose" aria-label="Rose background" aria-pressed="false" style="--swatch:linear-gradient(135deg,#572e4e,#dda38e)"></button>
+          <label class="color-swatch" title="Choose solid colour"><input type="color" id="background-color" value="#203c54" aria-label="Solid background colour"><span aria-hidden="true">+</span></label>
+        </div>
+        <div id="crop-controls" hidden>
+          <label class="range-label" for="wallpaper-zoom">Zoom <output id="zoom-value">100%</output></label><input type="range" id="wallpaper-zoom" min="1" max="4" step="0.01" value="1">
+          <label class="range-label" for="wallpaper-x">Horizontal crop</label><input type="range" id="wallpaper-x" min="0" max="1" step="0.001" value="0.5">
+          <label class="range-label" for="wallpaper-y">Vertical crop</label><input type="range" id="wallpaper-y" min="0" max="1" step="0.001" value="0.5">
+          <button class="text-button" id="reset-crop">Reset crop</button>
+        </div>
+      </section>
+      <section>
+        <div class="section-heading"><h2>Layout</h2><span class="step">02</span></div>
+        <label class="field-label" for="layout">Logo placement</label>
+        <select id="layout"><option value="classic">Classic · issuer left, network right</option><option value="japan">Japan · payment services on the right</option><option value="minimal">Minimal · branding along the bottom</option></select>
+        <p class="helper">Fixed layers follow this layout. Unlocked layers stay where you put them.</p>
+      </section>
+      <section class="overlay-section">
+        <div class="section-heading"><h2>Custom overlay</h2><span class="step">03</span></div>
+        <label class="field-label" for="overlay-mode">Import as</label>
+        <select id="overlay-mode"><option value="full">Full-card artwork · preserve alignment</option><option value="logo">Individual logo · place in a slot</option></select>
+        <label class="button secondary upload-overlay" tabindex="0" role="button" aria-label="Add transparent PNG overlays"><input type="file" id="overlay-file" accept="image/png,image/webp" multiple hidden><span aria-hidden="true">＋</span> Add transparent PNG</label>
+        <p class="helper">For AMEX borders or Photoshop artwork, use a full-card PNG with transparent margins.</p>
+      </section>
+      <p class="privacy-note"><span aria-hidden="true">⌁</span> Your images never leave this device.</p>
+    </aside>
+
+    <section class="center-panel" aria-label="Card editor">
+      <div class="canvas-heading"><div><span class="eyebrow">LIVE PREVIEW</span><h2>Make it yours.</h2></div><span class="dimension-badge">1536 × 969</span></div>
+      <div class="stage-area">
+        <div class="stage-tools" role="group" aria-label="Editing mode"><button id="mode-layers" class="tool-button active" aria-pressed="true">↖ Layers</button><button id="mode-wallpaper" class="tool-button" aria-pressed="false">✥ Wallpaper</button></div>
+        <div class="card-stage" id="card-stage" tabindex="0" role="application" aria-label="Card preview. Select a layer in the layer list. Unlock it to drag, or use arrow keys to move it.">
+          <canvas id="card-canvas" width="1536" height="969" aria-label="Your composed card artwork"></canvas>
+          <div id="selection-box" class="selection-box" hidden><span id="selection-label"></span><i></i><i></i><i></i><i></i></div>
+        </div>
+        <p class="canvas-hint" id="canvas-hint">Choose logos below to start building your card.</p>
+        <div class="preview-footer"><span><i></i> AIRCard-ready PNG</span><label><input id="rounded-preview" type="checkbox" checked> Rounded preview</label></div>
+      </div>
+      <section class="library" aria-label="Logo library">
+        <div class="library-heading"><div><span class="eyebrow">THE FINISHING TOUCHES</span><h2>Logo library</h2></div><span id="library-count" class="muted"></span></div>
+        <div class="library-controls"><div class="category-tabs" role="group" aria-label="Logo category"><button class="category active" data-category="all" aria-pressed="true">All</button><button class="category" data-category="network" aria-pressed="false">Networks</button><button class="category" data-category="service" aria-pressed="false">Payment services</button><button class="category" data-category="issuer" aria-pressed="false">Banks</button><button class="category" data-category="symbol" aria-pressed="false">Symbols</button></div><input type="search" id="logo-search" placeholder="Find a logo…" aria-label="Search logo library"></div>
+        <div id="logo-grid" class="logo-grid"><p class="helper">Loading logo library…</p></div>
+        <p class="library-note">Select as many as you need. Missing a brand? Add it as a custom overlay.</p>
+      </section>
+    </section>
+
+    <aside class="panel layers-panel" aria-label="Layer controls">
+      <div class="layer-heading"><h2>Layers</h2><span id="layer-count" class="count-badge">0</span></div>
+      <p class="helper layer-help">Top of the list = front of the card.</p>
+      <div id="layer-list" class="layer-list"></div>
+      <div class="base-layer"><span aria-hidden="true">▧</span><div>Wallpaper<small>Background layer</small></div><span aria-label="Fixed background">⌑</span></div>
+      <section id="inspector" class="inspector" hidden>
+        <div class="section-heading"><h2 id="inspector-title">Layer</h2><button id="delete-layer" class="text-button danger">Remove</button></div>
+        <label class="check-row"><input type="checkbox" id="layer-fixed" checked><span>Fixed position<small id="fixed-help">Aligned to the selected layout</small></span><span aria-hidden="true">⌑</span></label>
+        <div class="two-fields" id="position-fields"><label>X position<input type="number" id="layer-x" min="0" max="1536" step="1"></label><label>Y position<input type="number" id="layer-y" min="0" max="969" step="1"></label></div>
+        <label class="range-label" for="layer-size">Size <output id="size-value">100%</output></label><input id="layer-size" type="range" min="0.25" max="3" step="0.01" value="1">
+        <label class="range-label" for="layer-opacity">Opacity <output id="opacity-value">100%</output></label><input id="layer-opacity" type="range" min="0.05" max="1" step="0.01" value="1">
+        <label class="field-label" for="layer-tone">Logo finish</label><select id="layer-tone"><option value="original">Original artwork</option><option value="white">White</option><option value="black">Black</option><option value="gold">Gold foil</option><option value="silver">Silver</option></select>
+        <div class="layer-actions"><button class="button secondary" id="layer-up" title="Move towards front">↑ Forward</button><button class="button secondary" id="layer-down" title="Move towards back">↓ Backward</button></div>
+        <button class="text-button" id="reset-layer">Reset this layer</button>
+      </section>
+      <div class="export-note"><span class="eyebrow">READY WHEN YOU ARE</span><p>Export your design, then import the PNG into AirCard.</p><a href="https://github.com/Mak5er/AirCard" target="_blank" rel="noreferrer">Get AirCard <span aria-hidden="true">↗</span></a></div>
+    </aside>
+  </main>
+  <footer class="site-footer"><span>AirCard Studio <span class="muted">/ Personal card artwork editor</span></span><a href="./ASSETS.md" target="_blank">Artwork sources</a><span class="muted">Independent project. Not affiliated with card issuers.</span></footer>
+  <div id="status" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript>This editor needs JavaScript enabled. All editing happens locally in your browser.</noscript>
+</body>
+</html>

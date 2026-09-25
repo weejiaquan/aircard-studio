@@ -1,0 +1,93 @@
+[
+  {
+    "id": "visa",
+    "filename": "visa.svg",
+    "source": "https://companieslogo.com/visa/logo/",
+    "download": "https://companieslogo.com/img/orig/V-4a922b11.svg?t=1720244494&download=true",
+    "notes": "Trademark remains owned by the brand; source availability does not grant unrestricted usage."
+  },
+  {
+    "id": "mastercard",
+    "filename": "mastercard.svg",
+    "source": "https://companieslogo.com/mastercard/logo/",
+    "download": "https://companieslogo.com/img/orig/MA-8f5963d2.svg?t=1724308669&download=true",
+    "notes": "Trademark remains owned by the brand; source availability does not grant unrestricted usage."
+  },
+  {
+    "id": "amex",
+    "filename": "amex.svg",
+    "source": "https://www.americanexpress.com/it/merchant/materiale-puntovendita/materialidigitali.html",
+    "download": "https://www.aexp-static.com/cdaas/one/statics/axp-static-assets/1.8.0/package/dist/img/logos/dls-logo-bluebox-solid.svg",
+    "notes": "Trademark remains owned by the brand; source availability does not grant unrestricted usage."
+  },
+  {
+    "id": "jcb",
+    "filename": "jcb.png",
+    "source": "https://www.jcb.co.jp/merchant/support/logo/",
+    "download": "https://www.jcb.co.jp/merchant/support/logo/img/logo/jcb.png",
+    "notes": "Official JCB merchant resource; terms restrict to contracted merchants/brands, prohibit redistribution and alterations other than proportional scaling. iD requires clear space >=10% logo width. QUICPay minimum wordmark width 35px, clear space 20% logo height, white background."
+  },
+  {
+    "id": "unionpay",
+    "filename": "unionpay.png",
+    "source": "https://www.jcb.co.jp/merchant/support/logo/",
+    "download": "https://www.jcb.co.jp/merchant/support/logo/img/logo/unionpay.png",
+    "notes": "Official JCB merchant resource; terms restrict to contracted merchants/brands, prohibit redistribution and alterations other than proportional scaling. iD requires clear space >=10% logo width. QUICPay minimum wordmark width 35px, clear space 20% logo height, white background."
+  },
+  {
+    "id": "discover",
+    "filename": "discover.svg",
+    "source": "https://companieslogo.com/discover-financial-services/logo/",
+    "download": "https://companieslogo.com/img/orig/DFS_BIG-1aebf740.svg?t=1720244491&download=true",
+    "notes": "Unmodified vector logo from established Companieslogo repository. Trademark rights retained by brand."
+  },
+  {
+    "id": "quicpay",
+    "filename": "quicpay.png",
+    "source": "https://www.jcb.co.jp/merchant/support/logo/qp.html",
+    "download": "https://www.jcb.co.jp/merchant/support/logo/img/logo/qp01.png",
+    "notes": "Official JCB merchant resource; terms restrict to contracted merchants/brands, prohibit redistribution and alterations other than proportional scaling. iD requires clear space >=10% logo width. QUICPay minimum wordmark width 35px, clear space 20% logo height, white background."
+  },
+  {
+    "id": "quicpay-plus",
+    "filename": "quicpay-plus.png",
+    "source": "https://www.jcb.co.jp/merchant/support/logo/qp.html",
+    "download": "https://www.jcb.co.jp/merchant/support/logo/img/logo/qpp01.png",
+    "notes": "Official JCB merchant resource; terms restrict to contracted merchants/brands, prohibit redistribution and alterations other than proportional scaling. iD requires clear space >=10% logo width. QUICPay minimum wordmark width 35px, clear space 20% logo height, white background."
+  },
+  {
+    "id": "id",
+    "filename": "id.png",
+    "source": "https://www.jcb.co.jp/merchant/support/logo/",
+    "download": "https://www.jcb.co.jp/merchant/support/logo/img/logo/id.png",
+    "notes": "Official JCB merchant resource; terms restrict to contracted merchants/brands, prohibit redistribution and alterations other than proportional scaling. iD requires clear space >=10% logo width. QUICPay minimum wordmark width 35px, clear space 20% logo height, white background."
+  },
+  {
+    "id": "standard-chartered",
+    "filename": "standard-chartered.svg",
+    "source": "https://companieslogo.com/standard-chartered/logo/",
+    "download": "https://companieslogo.com/img/orig/STAN.L_BIG-cd204181.svg?t=1720244494&download=true",
+    "notes": "Unmodified original asset. Trademark rights retained by brand."
+  },
+  {
+    "id": "cibc",
+    "filename": "cibc.svg",
+    "source": "https://companieslogo.com/cibc/logo/",
+    "download": "https://companieslogo.com/img/orig/CM_BIG-4b83e417.svg?t=1720244491&download=true",
+    "notes": "Trademark remains owned by the brand; source availability does not grant unrestricted usage."
+  },
+  {
+    "id": "hsbc",
+    "filename": "hsbc.svg",
+    "source": "https://companieslogo.com/hsbc/logo/",
+    "download": "https://companieslogo.com/img/orig/HSBC_BIG-d6cd9d44.svg?t=1720244492&download=true",
+    "notes": "Trademark remains owned by the brand; source availability does not grant unrestricted usage."
+  },
+  {
+    "id": "contactless",
+    "filename": "contactless.svg",
+    "source": "https://www.marefa.org/%D9%85%D9%84%D9%81%3AEMVCoContactlessIndicator.svg",
+    "download": "https://www.marefa.org/w/images/e/e0/EMVCoContactlessIndicator.svg",
+    "notes": "EMVCo four-wave contactless indicator, downloaded from Marefa mirror. SHA1 matches Wikimedia original attributed to EMVCo. Commons labels simple-shape public domain; trademark licensing and reproduction requirements remain applicable."
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "visa",
+    "name": "Visa",
+    "category": "network",
+    "src": "./assets/logos/visa.svg",
+    "defaultTone": "white"
+  },
+  {
+    "id": "mastercard",
+    "name": "Mastercard",
+    "category": "network",
+    "src": "./assets/logos/mastercard.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "amex",
+    "name": "American Express",
+    "category": "network",
+    "src": "./assets/logos/amex.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "jcb",
+    "name": "JCB",
+    "category": "network",
+    "src": "./assets/logos/jcb.png",
+    "defaultTone": "original"
+  },
+  {
+    "id": "unionpay",
+    "name": "UnionPay",
+    "category": "network",
+    "src": "./assets/logos/unionpay.png",
+    "defaultTone": "original"
+  },
+  {
+    "id": "discover",
+    "name": "Discover",
+    "category": "network",
+    "src": "./assets/logos/discover.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "quicpay",
+    "name": "QUICPay",
+    "category": "service",
+    "src": "./assets/logos/quicpay.png",
+    "defaultTone": "original"
+  },
+  {
+    "id": "quicpay-plus",
+    "name": "QUICPay+",
+    "category": "service",
+    "src": "./assets/logos/quicpay-plus.png",
+    "defaultTone": "original"
+  },
+  {
+    "id": "id",
+    "name": "iD",
+    "category": "service",
+    "src": "./assets/logos/id.png",
+    "defaultTone": "original"
+  },
+  {
+    "id": "standard-chartered",
+    "name": "Standard Chartered",
+    "category": "issuer",
+    "src": "./assets/logos/standard-chartered.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "cibc",
+    "name": "CIBC",
+    "category": "issuer",
+    "src": "./assets/logos/cibc.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "hsbc",
+    "name": "HSBC",
+    "category": "issuer",
+    "src": "./assets/logos/hsbc.svg",
+    "defaultTone": "original"
+  },
+  {
+    "id": "contactless",
+    "name": "Contactless",
+    "category": "symbol",
+    "src": "./assets/logos/contactless.svg",
+    "defaultTone": "white"
+  }
+]
