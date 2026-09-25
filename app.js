@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT, LAYOUTS, clamp, coverRect, layerRect, unlockLayer, moveLayer, hitTest, reorderLayer } from './model.js';
+import { WIDTH, HEIGHT, LAYOUTS, createEffects, clamp, coverRect, layerRect, unlockLayer, moveLayer, hitTest, reorderLayer } from './model.js';
 import { renderCard, releaseFinishCache } from './renderer.js';
 
 const $ = id => document.getElementById(id);
@@ -76,10 +76,26 @@ function updateInspector() {
   $('size-value').value = `${Math.round((layer.fixed ? 1 : layer.scale) * 100)}%`;
   $('layer-opacity').value = layer.opacity; $('opacity-value').value = `${Math.round(layer.opacity * 100)}%`;
   $('layer-tone').value = layer.tone;
+  updateEffectsInspector(layer);
   const index = state.layers.indexOf(layer);
   $('layer-up').disabled = index === state.layers.length - 1;
   $('layer-down').disabled = index === 0;
   updateHint();
+}
+
+function updateEffectsInspector(layer) {
+  layer.effects ??= createEffects();
+  for (const [name, effect] of Object.entries(layer.effects)) {
+    $(`effect-${name}-enabled`).checked = effect.enabled;
+    $(`effect-${name}-controls`).hidden = !effect.enabled;
+    for (const [property, value] of Object.entries(effect)) {
+      if (property === 'enabled') continue;
+      const id = `effect-${name}-${property}`;
+      $(id).value = value;
+      const output = $(id + '-value');
+      if (output) output.value = property === 'opacity' ? `${Math.round(value * 100)}%` : `${value}${property === 'x' || property === 'y' ? ' px' : ''}`;
+    }
+  }
 }
 
 function element(tag, cls, text) {
@@ -142,7 +158,7 @@ async function addAsset(id) {
   try {
     const image = imageCache.get(id) ?? await loadImage(asset.src);
     imageCache.set(id, image);
-    const layer = { id, assetId: id, name: asset.name, category: asset.category, url: asset.src, image, iw: image.naturalWidth, ih: image.naturalHeight, fixed: true, visible: true, scale: 1, opacity: 1, tone: asset.defaultTone ?? 'original' };
+    const layer = { id, assetId: id, name: asset.name, category: asset.category, url: asset.src, image, iw: image.naturalWidth, ih: image.naturalHeight, fixed: true, visible: true, scale: 1, opacity: 1, tone: asset.defaultTone ?? 'original', effects: createEffects() };
     state.layers.push(layer); state.selected = id;
   } finally { loadingAssets.delete(id); refresh(); }
 }
@@ -200,7 +216,7 @@ async function addOverlays(files, fullCard) {
     if (state.layers.length >= 32) { status('This design has reached the 32-layer limit.', true); break; }
     try {
       const data = await readLocalImage(file, true);
-      const layer = { ...data, id: `custom-${crypto.randomUUID()}`, name: file.name.replace(/\.[^.]+$/, ''), category: 'custom', custom: true, fullCard, fixed: true, visible: true, scale: 1, opacity: 1, tone: 'original' };
+      const layer = { ...data, id: `custom-${crypto.randomUUID()}`, name: file.name.replace(/\.[^.]+$/, ''), category: 'custom', custom: true, fullCard, fixed: true, visible: true, scale: 1, opacity: 1, tone: 'original', effects: createEffects() };
       // Full-card overlays sit above wallpaper and behind separate logo layers.
       if (fullCard) state.layers.unshift(layer); else state.layers.push(layer);
       selectLayer(layer.id); refresh();
@@ -283,8 +299,20 @@ $('layer-fixed').addEventListener('change', event => { const layer = current(); 
 for (const axis of ['x', 'y']) $('layer-' + axis).addEventListener('change', event => { const layer = current(); const value = event.target.valueAsNumber; if (!layer || !Number.isFinite(value)) { updateInspector(); return; } const rect = layerRect(layer, state.layers, state.layout); moveLayer(layer, state.layers, state.layout, axis === 'x' ? value : rect.x, axis === 'y' ? value : rect.y); updateInspector(); requestPaint(); });
 for (const property of ['size', 'opacity']) $('layer-' + property).addEventListener('input', event => { const layer = current(); if (!layer) return; if (property === 'size') { if (layer.fixed) return; layer.scale = Number(event.target.value); } else layer.opacity = Number(event.target.value); updateInspector(); requestPaint(); });
 $('layer-tone').addEventListener('change', event => { const layer = current(); if (layer) { layer.tone = event.target.value; requestPaint(); } });
+for (const [name, defaults] of Object.entries(createEffects())) {
+  for (const property of Object.keys(defaults)) {
+    const control = $(`effect-${name}-${property}`);
+    control.addEventListener(property === 'enabled' ? 'change' : 'input', event => {
+      const layer = current(); if (!layer) return;
+      layer.effects ??= createEffects();
+      layer.effects[name][property] = property === 'enabled' ? event.target.checked : property === 'color' ? event.target.value : Number(event.target.value);
+      updateEffectsInspector(layer); requestPaint();
+    });
+  }
+}
+$('reset-effects').addEventListener('click', () => { const layer = current(); if (!layer) return; layer.effects = createEffects(); releaseFinishCache(layer.id); updateEffectsInspector(layer); requestPaint(); });
 for (const [id, direction] of [['layer-up', 1], ['layer-down', -1]]) $(id).addEventListener('click', () => { reorderLayer(state.layers, state.selected, direction); refresh(); });
-$('reset-layer').addEventListener('click', () => { const layer = current(); if (!layer) return; Object.assign(layer, { fixed: true, scale: 1, opacity: 1, tone: catalog.find(asset => asset.id === layer.assetId)?.defaultTone ?? 'original', visible: true }); refresh(); });
+$('reset-layer').addEventListener('click', () => { const layer = current(); if (!layer) return; Object.assign(layer, { fixed: true, scale: 1, opacity: 1, tone: catalog.find(asset => asset.id === layer.assetId)?.defaultTone ?? 'original', visible: true, effects: createEffects() }); releaseFinishCache(layer.id); refresh(); });
 $('delete-layer').addEventListener('click', () => removeLayer(state.selected));
 
 async function exportPng() {

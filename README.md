@@ -7,7 +7,7 @@ A static, client-only card artwork editor for GitHub Pages. Plain HTML, CSS and 
 1. Upload a wallpaper or choose a background colour.
 2. Select any combination of payment networks, services, bank logos and symbols.
 3. Every logo starts in a fixed template slot. Uncheck **Fixed position** to drag it, use arrow keys (Shift for larger steps), or enter its X/Y coordinates. Rechecking the box restores the preset size and position.
-4. Adjust finish and opacity, hide layers or change stacking order.
+4. Adjust finish and opacity, hide layers or change stacking order. Under **Layer effects**, enable **Colour overlay**, **Drop shadow**, or **Outer glow** independently. Choose each effect's colour and opacity; adjust shadow softness and X/Y offset or glow spread. Effects also work while a layer is fixed and are included in the exported PNG. **Reset effects** clears just these effects; **Reset this layer** clears all customization on that layer.
 5. Upload custom transparent PNG/WebP overlays. Choose **Full-card artwork** for a 1536 × 969 Photoshop export with its transparent margins preserved; choose **Individual logo** for tightly cropped logo files. Full-card artwork starts behind separate logos. Files with other aspect ratios are fitted without stretching.
 6. Export the flattened 1536 × 969 PNG and import it into [AirCard](https://github.com/Mak5er/AirCard).
 
@@ -30,7 +30,7 @@ npm test
 npm run build
 ```
 
-No dependency installation is required. The build copies only public static files into `dist/` and validates bundled SVGs and catalogue paths. Tests cover crop geometry, template alignment, multiple logos, locking/unlocking, dragging bounds, ordering, masking and export rendering commands.
+No dependency installation is required. The build copies only public static files into `dist/` and validates bundled SVGs and catalogue paths. Tests cover crop geometry, template alignment, multiple logos, locking/unlocking, dragging bounds, ordering, alpha masking, effect isolation, finish caching and export rendering commands. Preview and export use the same full-resolution effects renderer; effects outside the card edge are clipped by the exported canvas.
 
 ## GitHub Pages
 

@@ -4,6 +4,14 @@ export const LAYOUTS = ['classic', 'japan', 'minimal'];
 export const TONES = ['original', 'white', 'black', 'gold', 'silver'];
 export const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
+export function createEffects() {
+  return {
+    overlay: { enabled: false, color: '#d8f36a', opacity: .5 },
+    shadow: { enabled: false, color: '#000000', opacity: .65, blur: 20, x: 8, y: 12 },
+    glow: { enabled: false, color: '#ffffff', opacity: .8, blur: 30 },
+  };
+}
+
 export function containRect(iw, ih, box) {
   if (!(iw > 0 && ih > 0)) throw new Error('Image dimensions must be positive.');
   const scale = Math.min(box.w / iw, box.h / ih);

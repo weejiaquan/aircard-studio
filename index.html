@@ -87,6 +87,32 @@
         <label class="range-label" for="layer-size">Size <output id="size-value">100%</output></label><input id="layer-size" type="range" min="0.25" max="3" step="0.01" value="1">
         <label class="range-label" for="layer-opacity">Opacity <output id="opacity-value">100%</output></label><input id="layer-opacity" type="range" min="0.05" max="1" step="0.01" value="1">
         <label class="field-label" for="layer-tone">Logo finish</label><select id="layer-tone"><option value="original">Original artwork</option><option value="white">White</option><option value="black">Black</option><option value="gold">Gold foil</option><option value="silver">Silver</option></select>
+        <div class="effects-heading"><h3>Layer effects</h3><button class="text-button" id="reset-effects">Reset effects</button></div>
+        <div class="effect-card">
+          <label class="effect-toggle"><input type="checkbox" id="effect-overlay-enabled"><span>Colour overlay</span></label>
+          <div class="effect-controls" id="effect-overlay-controls" hidden>
+            <label class="effect-color">Colour<input type="color" id="effect-overlay-color" value="#d8f36a"></label>
+            <label class="range-label" for="effect-overlay-opacity">Opacity <output id="effect-overlay-opacity-value">50%</output></label><input type="range" id="effect-overlay-opacity" min="0" max="1" step="0.01" value="0.5">
+          </div>
+        </div>
+        <div class="effect-card">
+          <label class="effect-toggle"><input type="checkbox" id="effect-shadow-enabled"><span>Drop shadow</span></label>
+          <div class="effect-controls" id="effect-shadow-controls" hidden>
+            <label class="effect-color">Colour<input type="color" id="effect-shadow-color" value="#000000"></label>
+            <label class="range-label" for="effect-shadow-opacity">Opacity <output id="effect-shadow-opacity-value">65%</output></label><input type="range" id="effect-shadow-opacity" min="0" max="1" step="0.01" value="0.65">
+            <label class="range-label" for="effect-shadow-blur">Softness <output id="effect-shadow-blur-value">20</output></label><input type="range" id="effect-shadow-blur" min="0" max="80" step="1" value="20">
+            <label class="range-label" for="effect-shadow-x">Horizontal offset <output id="effect-shadow-x-value">8 px</output></label><input type="range" id="effect-shadow-x" min="-100" max="100" step="1" value="8">
+            <label class="range-label" for="effect-shadow-y">Vertical offset <output id="effect-shadow-y-value">12 px</output></label><input type="range" id="effect-shadow-y" min="-100" max="100" step="1" value="12">
+          </div>
+        </div>
+        <div class="effect-card">
+          <label class="effect-toggle"><input type="checkbox" id="effect-glow-enabled"><span>Outer glow</span></label>
+          <div class="effect-controls" id="effect-glow-controls" hidden>
+            <label class="effect-color">Colour<input type="color" id="effect-glow-color" value="#ffffff"></label>
+            <label class="range-label" for="effect-glow-opacity">Opacity <output id="effect-glow-opacity-value">80%</output></label><input type="range" id="effect-glow-opacity" min="0" max="1" step="0.01" value="0.8">
+            <label class="range-label" for="effect-glow-blur">Spread <output id="effect-glow-blur-value">30</output></label><input type="range" id="effect-glow-blur" min="0" max="100" step="1" value="30">
+          </div>
+        </div>
         <div class="layer-actions"><button class="button secondary" id="layer-up" title="Move towards front">↑ Forward</button><button class="button secondary" id="layer-down" title="Move towards back">↓ Backward</button></div>
         <button class="text-button" id="reset-layer">Reset this layer</button>
       </section>

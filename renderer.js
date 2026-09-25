@@ -8,30 +8,84 @@ export const BACKGROUNDS = {
 };
 
 const finishCache = new Map();
+const effectsSurfaces = new WeakMap();
 export function releaseFinishCache(id) {
-  for (const key of finishCache.keys()) if (key.startsWith(`${id}:`)) finishCache.delete(key);
+  finishCache.delete(id);
 }
 
 function finishedImage(layer, makeCanvas) {
-  if (layer.tone === 'original') return layer.image;
-  const key = `${layer.id}:${layer.tone}`;
-  if (finishCache.has(key)) return finishCache.get(key);
+  const overlay = layer.effects?.overlay;
+  const hasOverlay = overlay?.enabled && overlay.opacity > 0;
+  if (layer.tone === 'original' && !hasOverlay) return layer.image;
+  const key = `${layer.tone}:${hasOverlay ? `${overlay.color}:${overlay.opacity}` : 'none'}`;
+  const cached = finishCache.get(layer.id);
+  if (cached?.key === key && cached.image === layer.image) return cached.surface;
   const surface = makeCanvas();
   const scale = Math.min(1536 / layer.iw, 969 / layer.ih);
   surface.width = Math.max(1, Math.round(layer.iw * scale));
   surface.height = Math.max(1, Math.round(layer.ih * scale));
   const ctx = surface.getContext('2d');
   ctx.drawImage(layer.image, 0, 0, surface.width, surface.height);
-  ctx.globalCompositeOperation = 'source-in';
-  if (layer.tone === 'gold' || layer.tone === 'silver') {
-    const gradient = ctx.createLinearGradient(0, 0, surface.width * .25, surface.height);
-    const colors = layer.tone === 'gold' ? ['#90601a', '#ffedb0', '#d5a444', '#a97620', '#f4db8f'] : ['#737f8d', '#f6f9ff', '#a6b1bf', '#71808f', '#e5ecf4'];
-    colors.forEach((color, i) => gradient.addColorStop(i / (colors.length - 1), color));
-    ctx.fillStyle = gradient;
-  } else ctx.fillStyle = layer.tone === 'white' ? '#ffffff' : '#111111';
-  ctx.fillRect(0, 0, surface.width, surface.height);
-  finishCache.set(key, surface);
+  if (layer.tone !== 'original') {
+    ctx.globalCompositeOperation = 'source-in';
+    if (layer.tone === 'gold' || layer.tone === 'silver') {
+      const gradient = ctx.createLinearGradient(0, 0, surface.width * .25, surface.height);
+      const colors = layer.tone === 'gold' ? ['#90601a', '#ffedb0', '#d5a444', '#a97620', '#f4db8f'] : ['#737f8d', '#f6f9ff', '#a6b1bf', '#71808f', '#e5ecf4'];
+      colors.forEach((color, i) => gradient.addColorStop(i / (colors.length - 1), color));
+      ctx.fillStyle = gradient;
+    } else ctx.fillStyle = layer.tone === 'white' ? '#ffffff' : '#111111';
+    ctx.fillRect(0, 0, surface.width, surface.height);
+  }
+  if (hasOverlay) {
+    // Tint only existing pixels; source-atop preserves the original alpha exactly.
+    ctx.globalCompositeOperation = 'source-atop';
+    ctx.globalAlpha = overlay.opacity;
+    ctx.fillStyle = overlay.color;
+    ctx.fillRect(0, 0, surface.width, surface.height);
+  }
+  // Keep only the latest finish per layer, including during colour-picker drags.
+  finishCache.set(layer.id, { key, surface, image: layer.image });
   return surface;
+}
+
+function shadowColor(color, opacity) {
+  const hex = color.replace('#', '');
+  return `rgba(${parseInt(hex.slice(0, 2), 16)}, ${parseInt(hex.slice(2, 4), 16)}, ${parseInt(hex.slice(4, 6), 16)}, ${opacity})`;
+}
+
+function drawHalo(ctx, image, rect, effect, x = 0, y = 0) {
+  if (!effect?.enabled || effect.opacity <= 0) return;
+  // Cast the shadow into the output while keeping its source outside the canvas.
+  // This avoids drawing the logo twice (important for semi-transparent PNGs).
+  const shift = WIDTH * 3;
+  ctx.save();
+  ctx.shadowColor = shadowColor(effect.color, effect.opacity);
+  ctx.shadowBlur = effect.blur;
+  ctx.shadowOffsetX = shift + x;
+  ctx.shadowOffsetY = y;
+  ctx.drawImage(image, rect.x - shift, rect.y, rect.w, rect.h);
+  ctx.restore();
+}
+
+function drawLayer(ctx, layer, rect, makeCanvas) {
+  const image = finishedImage(layer, makeCanvas);
+  const shadow = layer.effects?.shadow, glow = layer.effects?.glow;
+  if (!(shadow?.enabled && shadow.opacity > 0) && !(glow?.enabled && glow.opacity > 0)) {
+    ctx.drawImage(image, rect.x, rect.y, rect.w, rect.h);
+    return;
+  }
+  let surface = effectsSurfaces.get(makeCanvas);
+  if (!surface) {
+    surface = makeCanvas(); surface.width = WIDTH; surface.height = HEIGHT;
+    effectsSurfaces.set(makeCanvas, surface);
+  }
+  const group = surface.getContext('2d');
+  group.clearRect(0, 0, WIDTH, HEIGHT);
+  drawHalo(group, image, rect, shadow, shadow?.x, shadow?.y);
+  drawHalo(group, image, rect, glow);
+  group.drawImage(image, rect.x, rect.y, rect.w, rect.h);
+  // Layer opacity applies once to the whole group, including its shadow and glow.
+  ctx.drawImage(surface, 0, 0);
 }
 
 export function renderCard(ctx, state, makeCanvas) {
@@ -54,7 +108,7 @@ export function renderCard(ctx, state, makeCanvas) {
     if (!layer.visible || !layer.image) continue;
     const rect = layerRect(layer, state.layers, state.layout);
     ctx.globalAlpha = layer.opacity;
-    ctx.drawImage(finishedImage(layer, makeCanvas), rect.x, rect.y, rect.w, rect.h);
+    drawLayer(ctx, layer, rect, makeCanvas);
   }
   ctx.restore();
 }
