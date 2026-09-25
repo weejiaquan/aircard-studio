@@ -322,7 +322,7 @@ async function init() {
     if (!response.ok) throw new Error('The logo library could not load. Custom uploads still work.');
     catalog = await response.json(); renderLibrary();
     // A real, editable example with independently selectable marks.
-    for (const id of ['visa', 'quicpay', 'contactless']) if (catalog.some(asset => asset.id === id)) await addAsset(id);
+    for (const id of ['visa', 'contactless']) if (catalog.some(asset => asset.id === id)) await addAsset(id);
     state.selected = null; refresh(); registerTools();
   } catch (error) { $('logo-grid').replaceChildren(element('p', 'helper', error.message)); status(error.message, true); }
 }
